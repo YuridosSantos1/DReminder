@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agenda & Tarefas | Dashboard</title>
+    <!-- Google Fonts: Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar para Filtros e Categorias -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i data-lucide="check-square" class="logo-icon"></i>
+                    <span>DReminder</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <span class="nav-section-title">Visualizações</span>
+                    <button class="nav-btn active" id="filter-all">
+                        <i data-lucide="list-todo"></i>
+                        <span>Todas as Tarefas</span>
+                        <span class="badge" id="badge-all">0</span>
+                    </button>
+                    <button class="nav-btn" id="filter-today">
+                        <i data-lucide="calendar-days"></i>
+                        <span>Hoje</span>
+                        <span class="badge" id="badge-today">0</span>
+                    </button>
+                    <button class="nav-btn" id="filter-week">
+                        <i data-lucide="calendar-range"></i>
+                        <span>Esta Semana</span>
+                        <span class="badge" id="badge-week">0</span>
+                    </button>
+                    <button class="nav-btn" id="filter-completed">
+                        <i data-lucide="check-circle2"></i>
+                        <span>Concluídas</span>
+                        <span class="badge" id="badge-completed">0</span>
+                    </button>
+                </div>
+
+                <div class="nav-section">
+                    <span class="nav-section-title">Categorias</span>
+                    <div class="category-filters" id="category-filters-list">
+                        <!-- Gerado dinamicamente -->
+                    </div>
+                </div>
+            </nav>
+
+            <div class="sidebar-footer">
+                <p>TaskFlow &copy; 2026</p>
+                <p class="subtext">Organização Inteligente</p>
+            </div>
+        </aside>
+
+        <!-- Conteúdo Principal -->
+        <main class="main-content">
+            <!-- Coluna da Esquerda: Calendário -->
+            <section class="calendar-column">
+                <div class="glass-card calendar-card">
+                    <div class="calendar-header">
+                        <button class="btn-icon" id="prev-month" title="Mês Anterior">
+                            <i data-lucide="chevron-left"></i>
+                        </button>
+                        <h2 class="calendar-title" id="calendar-month-year">Junho 2026</h2>
+                        <button class="btn-icon" id="next-month" title="Próximo Mês">
+                            <i data-lucide="chevron-right"></i>
+                        </button>
+                    </div>
+
+                    <!-- Dias da Semana -->
+                    <div class="calendar-weekdays">
+                        <div>Dom</div>
+                        <div>Seg</div>
+                        <div>Ter</div>
+                        <div>Qua</div>
+                        <div>Qui</div>
+                        <div>Sex</div>
+                        <div>Sáb</div>
+                    </div>
+
+                    <!-- Grade de Dias -->
+                    <div class="calendar-days" id="calendar-days-grid">
+                        <!-- Inserido dinamicamente pelo JS -->
+                    </div>
+
+                    <div class="calendar-footer">
+                        <button class="btn btn-secondary btn-sm" id="btn-today">
+                            <i data-lucide="calendar"></i>
+                            <span>Ir para Hoje</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Estatísticas Rápidas -->
+                <div class="glass-card stats-card">
+                    <h3>Progresso</h3>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" id="progress-bar-fill" style="width: 0%"></div>
+                    </div>
+                    <div class="stats-text">
+                        <span id="stats-percentage">0% concluído</span>
+                        <span id="stats-count">0 de 0 tarefas</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Coluna da Direita: Lista de Tarefas -->
+            <section class="tasks-column">
+                <div class="tasks-header-wrapper">
+                    <div class="tasks-title-area">
+                        <h1 id="tasks-list-title">Todas as Tarefas</h1>
+                        <p class="subtitle" id="tasks-list-subtitle">Carregando informações...</p>
+                    </div>
+                    <button class="btn btn-primary" id="btn-open-add-modal">
+                        <i data-lucide="plus"></i>
+                        <span>Nova Tarefa</span>
+                    </button>
+                </div>
+
+                <!-- Barra de Pesquisa e Filtro Rápido -->
+                <div class="tasks-toolbar">
+                    <div class="search-box">
+                        <i data-lucide="search" class="search-icon"></i>
+                        <input type="text" id="search-input" placeholder="Pesquisar tarefas...">
+                    </div>
+                    <div class="toolbar-actions">
+                        <select class="select-filter" id="select-sort">
+                            <option value="date-asc">Data (Mais antigas)</option>
+                            <option value="date-desc" selected>Data (Mais recentes)</option>
+                            <option value="priority-desc">Prioridade (Alta -> Baixa)</option>
+                            <option value="alphabetical">Ordem Alfabética</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Lista de Tarefas Pendentes -->
+                <div class="tasks-container" id="tasks-list-pending">
+                    <!-- Tarefas serão injetadas aqui -->
+                    <div class="empty-state">
+                        <i data-lucide="clipboard-list" class="empty-icon"></i>
+                        <p>Nenhuma tarefa pendente encontrada.</p>
+                    </div>
+                </div>
+
+                <!-- Divisor e Lista de Concluídas -->
+                <div class="completed-section" id="completed-section">
+                    <button class="completed-header" id="btn-toggle-completed">
+                        <span>Concluídas (<span id="completed-count">0</span>)</span>
+                        <i data-lucide="chevron-down" id="completed-chevron"></i>
+                    </button>
+                    <div class="tasks-container" id="tasks-list-completed">
+                        <!-- Tarefas concluídas injetadas aqui -->
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal de Cadastro / Edição de Tarefas -->
+    <div class="modal-overlay" id="task-modal">
+        <div class="modal-content glass-card">
+            <div class="modal-header">
+                <h2 id="modal-title">Nova Tarefa</h2>
+                <button class="btn-icon" id="btn-close-modal">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <form id="task-form">
+                <input type="hidden" id="task-id">
+                
+                <div class="form-group">
+                    <label for="task-title-input">Título <span class="required">*</span></label>
+                    <input type="text" id="task-title-input" required placeholder="Ex: Estudar JavaScript">
+                </div>
+
+                <div class="form-group">
+                    <label for="task-desc-input">Descrição (Opcional)</label>
+                    <textarea id="task-desc-input" rows="3" placeholder="Detalhes sobre a tarefa..."></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="task-date-input">Data de Vencimento <span class="required">*</span></label>
+                        <input type="date" id="task-date-input" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="task-category-input">Categoria</label>
+                        <select id="task-category-input">
+                            <option value="Trabalho">Trabalho</option>
+                            <option value="Pessoal">Pessoal</option>
+                            <option value="Estudos">Estudos</option>
+                            <option value="Saúde">Saúde</option>
+                            <option value="Finanças">Finanças</option>
+                            <option value="Outros">Outros</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Prioridade</label>
+                        <div class="priority-selector">
+                            <label class="priority-opt priority-low">
+                                <input type="radio" name="priority" value="low" checked>
+                                <span class="opt-label">Baixa</span>
+                            </label>
+                            <label class="priority-opt priority-medium">
+                                <input type="radio" name="priority" value="medium">
+                                <span class="opt-label">Média</span>
+                            </label>
+                            <label class="priority-opt priority-high">
+                                <input type="radio" name="priority" value="high">
+                                <span class="opt-label">Alta</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="btn-cancel-modal">Cancelar</button>
+                    <button type="submit" class="btn btn-primary" id="btn-submit-task">Salvar Tarefa</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Script da Aplicação -->
+    <script src="app.js"></script>
+</body>
+</html>
