@@ -1,1 +1,1 @@
-Está é uma Lista de tarefas desenvolvida para organização
+Esta é uma Lista de tarefas desenvolvida para organização
